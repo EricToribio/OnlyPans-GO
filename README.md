@@ -1,2 +1,2 @@
 # React-Go
-Testing Goloang api with react frontend
+Testing Golang api with react frontend
