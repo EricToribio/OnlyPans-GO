@@ -23,9 +23,15 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	utils.ParseBody(r, CreateUser)
 
 	if models.FindUserByEmail(CreateUser.Email) == true {
-		res, _ := json.Marshal("User already exist")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write(res)
+		type Error struct {
+			err string
+		}
+		res := map[string]string{
+			"error": "User already exists",
+		}
+		e, _ := json.Marshal(res)
+		// w.WriteHeader(http.StatusNotAcceptable)
+		w.Write(e)
 	} else {
 		CreateUser.Password = models.HashPassword(CreateUser.Password)
 		CreateUser.CreateUser()

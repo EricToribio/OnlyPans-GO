@@ -5,6 +5,7 @@ export const Register = () => {
   const [lastName,setLastName] = useState()
   const [email,setEmail] = useState()
   const [password,setPassword] = useState()
+  const [error,setError] = useState(null)
 
   const onSubmitHandler = (e) => {
     e.preventDefault()
@@ -15,6 +16,8 @@ export const Register = () => {
     "password": password
     })
     .then(res => {
+      res.data.error ? 
+      setError(res.data.error) :
       console.log(res)
     }).catch(err => console.error(err))
 
@@ -23,6 +26,12 @@ export const Register = () => {
   return (
     <div>
       <form onSubmit={onSubmitHandler}>
+        <div>
+          {
+            error && 
+            <h4>{error}</h4>
+          }
+        </div>
       <div>
         <label htmlFor="firstName">First Name</label>
         <input type="text" onChange={(e) => setFirstName(e.target.value)}/>
