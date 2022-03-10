@@ -10,4 +10,7 @@ require (
 	golang.org/x/crypto v0.0.0-20220307211146-efcb8507fb70
 )
 
-require github.com/gorilla/handlers v1.5.1 // indirect
+require (
+	github.com/gorilla/handlers v1.5.1
+	github.com/rs/cors v1.8.2
+)
