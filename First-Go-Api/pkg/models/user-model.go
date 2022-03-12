@@ -2,13 +2,12 @@ package models
 
 import (
 	"fmt"
-	"time"
-
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/erictoribio/go-api/pkg/config"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
 var db *gorm.DB
@@ -16,16 +15,23 @@ var mySigningKey = []byte("mysupersecretphrase")
 
 type User struct {
 	gorm.Model
-	FirstName string `gorm:"not null" json:"firstName"`
-	LastName  string `json:"lastName"`
-	Email     string `"json:"email"`
-	Password  string `"json:"password"`
+	FirstName string   `gorm:"not null" json:"firstName"`
+	LastName  string   `json:"lastName"`
+	Email     string   `"json:"email"`
+	Password  string   `"json:"password"`
+	Recipes   []Recipe `gorm: "foreignKey: User_id "`
+	Users     []User   `gorm: "foreignKey: User_id "`
 }
 
 func init() {
 	config.Connect()
 	db = config.GetDB()
-	db.AutoMigrate(&User{})
+	db.AutoMigrate(&LikedUser{}, &LikedRecipe{}, &Recipe{}, &User{})
+	db.Debug().Model(&Recipe{}).AddForeignKey("user_id", "users(id)", "cascade", "cascade")
+	db.Debug().Model(&LikedRecipe{}).AddForeignKey("user_id", "users(id)", "cascade", "cascade")
+	db.Debug().Model(&LikedRecipe{}).AddForeignKey("recipe_id", "recipes(id)", "cascade", "cascade")
+	db.Debug().Model(&LikedUser{}).AddForeignKey("user_id", "users(id)", "cascade", "cascade")
+	db.Debug().Model(&LikedUser{}).AddForeignKey("liked", "users(id)", "cascade", "cascade")
 }
 
 func (u *User) CreateUser() *User {
