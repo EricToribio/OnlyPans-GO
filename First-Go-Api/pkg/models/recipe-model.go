@@ -7,13 +7,25 @@ import (
 
 type Recipe struct {
 	gorm.Model
-	Name         string
-	Category     string
-	Cuisine      string
-	Description  string
-	Ingredients  string
-	Instructions string
-	Image        string
-	User_id      uint
-	User         User
+	Name         string `gorm: "" json:"name"`
+	Category     string `json:"category"`
+	Cuisine      string `json:"cuisine"`
+	Description  string `json:"description"`
+	Ingredients  string `json:"ingredients"`
+	Instructions string `json:"instructions"`
+	Image        string `json:"image"`
+	User_id      uint   `gorm: "foreignKey: user_id "json:"user_id"`
+}
+
+func (r *Recipe) NewRecipe() *Recipe {
+	db.NewRecord(r)
+	db.Create(r)
+	return r
+}
+
+func GetAllRecipes() []Recipe {
+	var Recipes []Recipe
+	//db.Raw("SELECT name, category, cuisine FROM recipes").Scan(&Recipes)
+	db.Find(&Recipes)
+	return Recipes
 }

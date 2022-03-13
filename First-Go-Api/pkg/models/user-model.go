@@ -15,12 +15,13 @@ var mySigningKey = []byte("mysupersecretphrase")
 
 type User struct {
 	gorm.Model
-	FirstName string   `gorm:"not null" json:"firstName"`
-	LastName  string   `json:"lastName"`
-	Email     string   `"json:"email"`
-	Password  string   `"json:"password"`
-	Recipes   []Recipe `gorm: "foreignKey: User_id "`
-	Users     []User   `gorm: "foreignKey: User_id "`
+	FirstName   string        `gorm:"not null" json:"firstName"`
+	LastName    string        `json:"lastName"`
+	Email       string        `"json:"email"`
+	Password    string        `"json:"password"`
+	Recipes     []Recipe      `gorm: "foreignKey: user_id "`
+	Users       []User        `gorm: "foreignKey: user_id "`
+	LikedRecipe []LikedRecipe `gorm: "foreignKey: user_id "`
 }
 
 func init() {

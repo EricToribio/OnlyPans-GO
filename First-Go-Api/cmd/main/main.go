@@ -13,7 +13,7 @@ import (
 func main() {
 	r := mux.NewRouter()
 	routes.UserRoutes(r)
-	http.Handle("/", r)
+	http.Handle("/api", r)
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000"},
