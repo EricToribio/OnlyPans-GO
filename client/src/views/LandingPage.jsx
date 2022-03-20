@@ -8,8 +8,8 @@ import Header from '../components/LandingPage/Header';
 import NavLinks from '../components/LandingPage/NavLinks';
 import LandingBody from '../components/LandingPage/LandingBody';
 
-export default () => {
-  const [user, setUser] = useState('');
+export default ({loggedInUser, setLoggedInUser}) => {
+
   const [id, setId] = useState({id: ''})
   const myStyle = {
     backgroundImage:
@@ -21,18 +21,6 @@ export default () => {
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
   };
-
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/users/getloggedinuser", { withCredentials: true })
-      .then(res => {
-        setUser(res.data)
-        setId(res.data._id)
-      })
-      .catch(err => {
-        console.log("noUser logged in")
-      });
-  }, []);
-
   return (
     <div className='landingPage'
       style={myStyle}>
@@ -43,7 +31,7 @@ export default () => {
         </div>
         <div className='d-flex justify-content-end'>
           <div className='d-flex justify-content-evenly'>
-            <NavLinks user={user} setUser={setUser} />
+            <NavLinks  loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
           </div>
         </div>
       </div>

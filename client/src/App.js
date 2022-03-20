@@ -5,7 +5,7 @@ import {
   Switch,
   Route
 } from 'react-router-dom';
-
+import Cookies from "js-cookie"
 // Dashboard Imports
 import ManagePostsTab from './components/Dashboard/ManagePostsTab';
 import UsersLiked from './components/Dashboard/UsersLiked';
@@ -32,6 +32,9 @@ import './style.scss';
 import {  FavoriteRecipeView } from './views/RecipeCRUD/FavoriteRecipeView';
 
 export default () => {
+  const [loggedInUser, setLoggedInUser] = React.useState(
+    Cookies.get("user_id" ? Cookies.get("user_id") : "no user")
+  )
   return (
     <div className="App">
       {/* <ToggleColorMode> */}
@@ -39,20 +42,21 @@ export default () => {
         <Switch>
           {/* Login & Registration Routes */}
           <Route exact path='/'>
-            <LandingPage />
+            <LandingPage loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser} />
           </Route>
           {/* Dashboard Routes */}
           <Route exact path='/dashboard/:id'>
-            <Dashboard />
+            <Dashboard loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
           </Route>
           <Route exact path='/dashboard/edit/:id'>
-            <ManagePostsTab />
+            <ManagePostsTab loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
           </Route>
           <Route exact path='/dashboard/users/:id'>
-            <UsersLiked />
+            <UsersLiked loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
           </Route>
           <Route exact path='/dashboard/favorites/:id'>
-            <FavoriteRecipeView/>
+        
+            <FavoriteRecipeView loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
           </Route>
           {/* User Routes */}
           <Route exact path='/users'>

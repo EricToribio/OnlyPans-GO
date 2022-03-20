@@ -19,6 +19,7 @@ import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import useStyles from './Styles';
 import RegistrationModal from './RegistrationModal';
+import Cookies from 'js-cookie';
 
 
 const Copyright = (props) => {
@@ -37,7 +38,7 @@ const Copyright = (props) => {
 // eslint-disable-next-line no-unused-vars
 const theme = createTheme();
 
-export default ({ handleClose, setUser }) => {
+export default ({ handleClose, setLoggedInUser}) => {
   const [errors, setErrors] = useState("");
   const [loginInfo, setLoginInfo] = useState({
     email: "",
@@ -56,13 +57,14 @@ export default ({ handleClose, setUser }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:8000/api/login', loginInfo, { withCredentials: true })
+    axios.post('http://localhost:8080/api/login', loginInfo)
       .then(res => {
-        if (res.data.message === "success!") {
-          setUser(res.data)
-          handleClose()
-        } else if (res.data.message) {
-          setErrors(res.data)
+       if (res.data?.error){
+         setErrors(res.data.error)
+       }else {
+         Cookies.set("user_id", res.data, { path: '/'})
+         setLoggedInUser(Cookies.get("user_id"))
+         handleClose()
         }
       })
       .catch(err => console.log(err));
@@ -74,11 +76,11 @@ export default ({ handleClose, setUser }) => {
       , { withCredentials: true })
       .then(res => {
         
-        if (res.data.message === "success!") {
-          setUser(res.data)
-        } else {
-          setErrors(res.data)
-        }
+        // if (res.data.message === "success!") {
+        //   setUser(res.data)
+        // } else {
+        //   setErrors(res.data)
+        // }
         handleClose()
       })
       .catch(err => console.log(err));
@@ -178,7 +180,7 @@ export default ({ handleClose, setUser }) => {
           >
             <Grid item sx={{ textAlign: 'center' }}>
               Don't have an Account?
-              <RegistrationModal variant="body2" setUser={setUser} />
+              <RegistrationModal variant="body2" setLoggedInUser={setLoggedInUser}/>
             </Grid>
           </Grid>
         </Box>

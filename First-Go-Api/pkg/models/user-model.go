@@ -76,6 +76,7 @@ func CheckPasswordHash(password, hash string) bool {
 func GenerateJwt(user *User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
+	claims["user_id"] = user.ID
 	claims["firstname"] = user.FirstName
 	claims["lastName"] = user.LastName
 	claims["email"] = user.Email

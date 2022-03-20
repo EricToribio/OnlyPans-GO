@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable import/no-anonymous-default-export */
 import * as React from 'react';
 import { useState } from 'react';
 import axios from 'axios'
@@ -15,8 +13,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
-// import LoginModal from './LoginModal';
-
+import jwt_decode from "jwt-decode"
+import Cookies from "js-cookie"
 const Copyright = (props) => {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -30,10 +28,9 @@ const Copyright = (props) => {
   );
 }
 
-// eslint-disable-next-line no-unused-vars
 const theme = createTheme();
 
-export default ({ handleClose, setUser }) => {
+export default ({ handleClose, setLoggedInUser}) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -75,6 +72,10 @@ export default ({ handleClose, setUser }) => {
             // })
             // .catch(err => console.log(err))
           // login()
+        } else {
+          Cookies.set("user_id", res.data, { path:  '/' })
+          setLoggedInUser(jwt_decode(Cookies.get("user_id")))
+          handleClose()
         }
       })
       .catch(err => console.log(err))

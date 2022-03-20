@@ -5,8 +5,9 @@ import { Row } from '@mui-treasury/components/flex';
 import Button from '@mui/material/Button';
 import LoginModal from '../modals/LoginModal'
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
-export default ({ user, setUser }) => {
+export default ({ loggedInUser, setLoggedInUser}) => {
 
   const buttonStyle = {
     ':hover': {
@@ -18,10 +19,8 @@ export default ({ user, setUser }) => {
   }
 
   const logout = () => {
-    axios.get('http://localhost:8000/api/logout', { withCredentials: true })
-      .then(res => {
-        setUser('')
-      })
+    Cookies.remove("user_id")
+    setLoggedInUser("no user")
   }
 
   return (
@@ -33,16 +32,16 @@ export default ({ user, setUser }) => {
           justifyContent: 'space-evenly',
         }}
       >
-        {user === '' ?
+        {loggedInUser === "no user" ?
           <ul className='navlinks d-flex pt-3 px-3'>
             <li className='list-unstyled ps-2'>
-              <LoginModal setUser={setUser} >Log In</LoginModal>
+              <LoginModal setLoggedInUser={setLoggedInUser} >Log In</LoginModal>
             </li>
           </ul>
           :
           <ul className='navlinks d-flex pt-3 px-3'>
             <li className='list-unstyled pe-5'>
-              <Button component={Link} to={`/dashboard/${user._id}`}
+              <Button component={Link} to={`/dashboard/${loggedInUser.user_id}`}
                 sx={buttonStyle}
               >Home</Button>
             </li>
