@@ -4,9 +4,11 @@ import (
 	"fmt"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/erictoribio/go-api/pkg/config"
+	// "github.com/erictoribio/go-api/pkg/utils"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
+	"regexp"
 	"time"
 )
 
@@ -91,5 +93,30 @@ func GenerateJwt(user *User) (string, error) {
 	}
 
 	return tokenString, nil
+
+}
+
+func ValidUser(user *User) (map[string]string, int) {
+	tests := []string{".{7,}", "[a-z]", "[A-Z]", "[0-9]", "[^\\d\\w]"}
+	emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$`)
+
+	fmt.Println(user)
+	err := make(map[string]string)
+	if len(user.FirstName) < 3 {
+		err["firstName"] = "First name must be at least 3 characters"
+	}
+	if len(user.LastName) < 3 {
+		err["lastName"] = "Last name must be at least 3 characters"
+	}
+	if !emailRegex.MatchString(user.Email) {
+		err["email"] = "Enter a valid email address"
+	}
+	for _, test := range tests {
+		valid, _ := regexp.MatchString(test, user.Password)
+		if !valid {
+			err["password"] = "Password must have at least 1 lowercase letter, 1 uppercase letter,1 number, 1 special character and be at least 7 characters long"
+		}
+	}
+	return err, len(err)
 
 }

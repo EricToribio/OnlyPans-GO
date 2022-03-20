@@ -21,8 +21,15 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	CreateUser := &models.User{}
 	utils.ParseBody(r, CreateUser)
-
-	if models.FindUserByEmail(CreateUser.Email) == true {
+	validUser, lenOfErr := models.ValidUser(CreateUser)
+	fmt.Println(lenOfErr, validUser)
+	if lenOfErr != 0 {
+		res := map[string]interface{}{
+			"error": validUser,
+		}
+		e, _ := json.Marshal(res)
+		w.Write(e)
+	} else if models.FindUserByEmail(CreateUser.Email) == true {
 		type Error struct {
 			err string
 		}
@@ -30,7 +37,6 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 			"error": "User already exists",
 		}
 		e, _ := json.Marshal(res)
-		// w.WriteHeader(http.StatusNotAcceptable)
 		w.Write(e)
 	} else {
 		CreateUser.Password = models.HashPassword(CreateUser.Password)
