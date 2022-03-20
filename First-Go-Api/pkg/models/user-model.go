@@ -4,7 +4,6 @@ import (
 	"fmt"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/erictoribio/go-api/pkg/config"
-	// "github.com/erictoribio/go-api/pkg/utils"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
@@ -17,13 +16,14 @@ var mySigningKey = []byte("mysupersecretphrase")
 
 type User struct {
 	gorm.Model
-	FirstName   string        `gorm:"not null" json:"firstName"`
-	LastName    string        `json:"lastName"`
-	Email       string        `"json:"email"`
-	Password    string        `"json:"password"`
-	Recipes     []Recipe      `gorm: "foreignKey: user_id "`
-	Users       []User        `gorm: "foreignKey: user_id "`
-	LikedRecipe []LikedRecipe `gorm: "foreignKey: user_id "`
+	FirstName     string        `gorm:"not null" json:"firstName"`
+	LastName      string        `json:"lastName"`
+	Email         string        `"json:"email"`
+	Password      string        `"json:"password"`
+	ProfileAvatar string        `json:"profileAvatar"`
+	Recipes       []Recipe      `gorm: "foreignKey: user_id "`
+	Users         []User        `gorm: "foreignKey: user_id "`
+	LikedRecipe   []LikedRecipe `gorm: "foreignKey: user_id "`
 }
 
 func init() {
@@ -50,11 +50,9 @@ func GetAllUsers() []User {
 }
 
 func FindUserByEmail(Email string) bool {
-
 	var result struct {
 		Found bool
 	}
-
 	db.Raw("SELECT EXISTS(SELECT 1 FROM users WHERE email = ?) AS found",
 		Email).Scan(&result)
 	if result.Found {
@@ -77,23 +75,17 @@ func CheckPasswordHash(password, hash string) bool {
 
 func GenerateJwt(user *User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
-
 	claims := token.Claims.(jwt.MapClaims)
 	claims["firstname"] = user.FirstName
 	claims["lastName"] = user.LastName
 	claims["email"] = user.Email
 	claims["exp"] = time.Now().Add(time.Hour * 100).Unix()
-
 	tokenString, err := token.SignedString(mySigningKey)
-
 	if err != nil {
 		fmt.Errorf("Something went wrong: %v", err.Error())
 		return "", err
-
 	}
-
 	return tokenString, nil
-
 }
 
 func ValidUser(user *User) (map[string]string, int) {
