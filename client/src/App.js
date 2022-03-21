@@ -6,6 +6,8 @@ import {
   Route
 } from 'react-router-dom';
 import Cookies from "js-cookie"
+import jwt_decode from "jwt-decode"
+
 // Dashboard Imports
 import ManagePostsTab from './components/Dashboard/ManagePostsTab';
 import UsersLiked from './components/Dashboard/UsersLiked';
@@ -33,7 +35,7 @@ import {  FavoriteRecipeView } from './views/RecipeCRUD/FavoriteRecipeView';
 
 export default () => {
   const [loggedInUser, setLoggedInUser] = React.useState(
-    Cookies.get("user_id" ? Cookies.get("user_id") : "no user")
+    Cookies.get("user_id") ? jwt_decode(Cookies.get("user_id")) : "no user"
   )
   return (
     <div className="App">

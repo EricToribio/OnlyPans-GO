@@ -20,7 +20,7 @@ import Stack from '@mui/material/Stack';
 import useStyles from './Styles';
 import RegistrationModal from './RegistrationModal';
 import Cookies from 'js-cookie';
-
+import jwt_decode from 'jwt-decode'
 
 const Copyright = (props) => {
   return (
@@ -63,7 +63,7 @@ export default ({ handleClose, setLoggedInUser}) => {
          setErrors(res.data.error)
        }else {
          Cookies.set("user_id", res.data, { path: '/'})
-         setLoggedInUser(Cookies.get("user_id"))
+         setLoggedInUser(jwt_decode(Cookies.get("user_id")))
          handleClose()
         }
       })
@@ -71,16 +71,10 @@ export default ({ handleClose, setLoggedInUser}) => {
   };
 
   const googleSuccess = async (res) => {
-    axios.post('http://localhost:8000/api/google/login',
-      res.profileObj
-      , { withCredentials: true })
+    axios.post('http://localhost:8080/api/google/login', res.profileObj)
       .then(res => {
-        
-        // if (res.data.message === "success!") {
-        //   setUser(res.data)
-        // } else {
-        //   setErrors(res.data)
-        // }
+        Cookies.set("user_id", res.data, { path: '/' })
+        setLoggedInUser(jwt_decode(Cookies.get("user_id")))
         handleClose()
       })
       .catch(err => console.log(err));

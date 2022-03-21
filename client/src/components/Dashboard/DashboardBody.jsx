@@ -65,13 +65,13 @@ export default function BasicTabs({ user }) {
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
 
-  useEffect(() => {
-    axios.get(`http://localhost:8000/api/recipe/user/${user}`)
-      .then(res => {
-        // console.log(res.data);
-        setRecipe(res.data)
-      }).catch(err => console.log(err))
-  }, [user]);
+  // useEffect(() => {
+  //   axios.get(`http://localhost:8000/api/recipe/user/${user}`)
+  //     .then(res => {
+  //       // console.log(res.data);
+  //       setRecipe(res.data)
+  //     }).catch(err => console.log(err))
+  // }, [user]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

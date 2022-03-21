@@ -9,6 +9,7 @@ import EditUser from './EditUser';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const style = {
     position: 'absolute',
@@ -49,15 +50,10 @@ export default function TransitionsModal({ setLogout }) {
     }
 
     useEffect(() => {
-        axios.get("http://localhost:8000/api/users/getloggedinuser", { withCredentials: true })
-            .then(res => {
-                setUser(res.data)
-            })
-            .catch(err => {
-                console.log("noUser logged in")
+      !Cookies.get("user_id")  && 
                 history.push('/')
-            });
-    }, [history]);
+                
+    }, []);
 
     return (
         <div>

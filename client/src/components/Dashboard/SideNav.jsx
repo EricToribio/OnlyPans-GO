@@ -9,15 +9,13 @@ import Button from '@mui/material/Button';
 import EditUserModal from '../modals/EditUserModal';
 import ImgUploadModal from '../modals/ImgUploadModal';
 import StickyFooter from '../RecipeBlog/StickyFooter';
+import Cookies from 'js-cookie';
 
-export default ({ username, id, setLogout, avatar }) => {
+export default ({ username, id, avatar,setLogout }) => {
 
   const logout = () => {
-    axios.get('http://localhost:8000/api/logout',
-      { withCredentials: true })
-      .then(res => {
-        setLogout('')
-      });
+   Cookies.remove("user_id")
+    setLogout("no user")
   };
 
   const logo = require('../static/images/onlypansegglogo.png');

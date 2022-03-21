@@ -11,37 +11,28 @@ import { ThemeProvider } from "@material-ui/styles";
 
 const baseTheme = createTheme();
 
-export default () => {
-  const [user, setUser] = useState('');
-  const [logout, setLogout] = useState();
+export default ({loggedInUser, setLoggedInUser}) => {
   const history = useHistory();
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/users/getloggedinuser", { withCredentials: true })
-      .then(res => {
-        
-        setUser(res.data)
-      })
-      .catch(err => {
-        console.log("noUser logged in")
-        history.push('/')
-      });
-  }, [history, logout]);
+        loggedInUser == "no user" &&
+        history.push('/') 
+  }, [loggedInUser]);
   
 
   return (
     <div className=''>
       <div className='position-fixed'>
-        <SideNav setLogout={setLogout}
-          avatar={user.profileAvatar}
-          username={user.username}
-          id={user._id} />
+        <SideNav setLogout={setLoggedInUser}
+          avatar={loggedInUser.profileAvatar}
+          username={loggedInUser.username}
+          id={loggedInUser._id} />
       </div>
       <div className='dashboard-body'>
         <ToggleColorMode currentPage="dashboard">
           <ThemeProvider theme={baseTheme}>
             <div className="App">
-              <DashboardBody user={user._id} />
+              <DashboardBody user={loggedInUser._id} />
             </div>
           </ThemeProvider>
         </ToggleColorMode>
