@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import RecipeList from '../components/RecipeBlog/RecipeList';
 import BlogHeader from '../components/RecipeBlog/BlogHeader';
+import Cookies from 'js-cookie';
 
 export default () => {
   const [user, setUser] = useState("");
@@ -11,16 +12,9 @@ export default () => {
   const [logout, setLogout] = useState('');
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/users/getloggedinuser",
-      { withCredentials: true })
-      .then(res => {
-        setUser(res.data)
-      })
-      .catch(err => {
-        console.log("noUser logged in")
+    !Cookies.get("user_id") &&
         history.push('/')
-      })
-  }, [history, logout]);
+  }, []);
 
   return (
     <div className='container'>

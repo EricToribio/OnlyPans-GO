@@ -7,6 +7,7 @@ import SideNav from '../../components/Dashboard/SideNav';
 import ToggleColorMode from '../../components/Themes/ToggleDarkMode';
 import { ThemeProvider } from '@material-ui/styles';
 import { createTheme } from '@material-ui/core';
+import Cookies from 'js-cookie';
 
 const baseTheme = createTheme();
 
@@ -16,16 +17,10 @@ export const FavoriteRecipeView = () => {
   const history = useHistory();
 
   useEffect(async () => {
-    await axios.get("http://localhost:8000/api/users/getloggedinuser",
-      { withCredentials: true })
-      .then(res => {
-        setUser(res.data)
-      })
-      .catch(err => {
-        console.log("noUser logged in");
+    !Cookies.get("user_id") &&
         history.push('/');
-      })
-  }, [logout]);
+    
+  }, []);
 
   return (
     <div>

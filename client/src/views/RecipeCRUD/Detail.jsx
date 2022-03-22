@@ -15,6 +15,7 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import StickyFooter from '../../components/RecipeBlog/StickyFooter';
+import Cookies from 'js-cookie';
 
 const Detail = () => {
   const [recipe, setRecipe] = useState({})
@@ -23,20 +24,14 @@ const Detail = () => {
   const [user, setUser] = useState('');
 
   useEffect(() => {
-    axios.get("http://localhost:8000/api/users/getloggedinuser",
-      { withCredentials: true })
-      .then(res => {
-        console.log(res.data);
-        setUser(res.data)
-      })
-      .catch(err => {
+    !Cookies.get("user_id") &&
         history.push('/')
-        console.log("noUser logged in")
-      });
-    axios.get('http://localhost:8000/api/recipe/' + id)
-      .then(res => setRecipe(res.data))
-      .catch(err => console.error(err));
-  }, [history, id]);
+        
+  
+    // axios.get('http://localhost:8000/api/recipe/' + id)
+    //   .then(res => setRecipe(res.data))
+    //   .catch(err => console.error(err));
+  }, []);
 
   const onFavoriteHandler = (id, img, name) => {
     let newFavorite = { id, img, name }

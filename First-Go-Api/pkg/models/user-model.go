@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"fmt"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/erictoribio/go-api/pkg/config"
@@ -111,5 +112,14 @@ func ValidUser(user *User) (map[string]string, int) {
 		}
 	}
 	return err, len(err)
+}
 
+func GetUserByEmail(user *User) (*User, error) {
+	var User User
+	db.Find(&User, "email = ?", user.Email)
+	if User.Email == "" {
+		err := errors.New("invalid email or password")
+		return &User, err
+	}
+	return &User, errors.New("nil")
 }

@@ -38,7 +38,7 @@ const Copyright = (props) => {
 // eslint-disable-next-line no-unused-vars
 const theme = createTheme();
 
-export default ({ handleClose, setLoggedInUser}) => {
+export default ({ handleClose, setLoggedInUser }) => {
   const [errors, setErrors] = useState("");
   const [loginInfo, setLoginInfo] = useState({
     email: "",
@@ -59,12 +59,12 @@ export default ({ handleClose, setLoggedInUser}) => {
     e.preventDefault();
     axios.post('http://localhost:8080/api/login', loginInfo)
       .then(res => {
-       if (res.data?.error){
-         setErrors(res.data.error)
-       }else {
-         Cookies.set("user_id", res.data, { path: '/'})
-         setLoggedInUser(jwt_decode(Cookies.get("user_id")))
-         handleClose()
+        if (res.data?.error) {
+          setErrors(res.data.error)
+        } else {
+          Cookies.set("user_id", res.data, { path: '/' })
+          setLoggedInUser(jwt_decode(Cookies.get("user_id")))
+          handleClose()
         }
       })
       .catch(err => console.log(err));
@@ -109,12 +109,7 @@ export default ({ handleClose, setLoggedInUser}) => {
           Log In
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-          {
-            errors.message ?
-              <Stack sx={{ width: '100%', mt: 2 }} spacing={2}>
-                <Alert severity="error">{errors.message}</Alert>
-              </Stack> : ""
-          }
+        
           <TextField
             margin="normal"
             required
@@ -126,6 +121,7 @@ export default ({ handleClose, setLoggedInUser}) => {
             autoFocus
             onChange={loginChangeHandler}
           />
+          
           <TextField
             margin="normal"
             required
@@ -137,6 +133,12 @@ export default ({ handleClose, setLoggedInUser}) => {
             autoComplete="current-password"
             onChange={loginChangeHandler}
           />
+            {
+            errors ?
+              <Stack sx={{ width: '100%', my: 2 }} spacing={2}>
+                <Alert severity="error">{errors}</Alert>
+              </Stack> : ""
+          }
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
@@ -174,7 +176,7 @@ export default ({ handleClose, setLoggedInUser}) => {
           >
             <Grid item sx={{ textAlign: 'center' }}>
               Don't have an Account?
-              <RegistrationModal variant="body2" setLoggedInUser={setLoggedInUser}/>
+              <RegistrationModal variant="body2" setLoggedInUser={setLoggedInUser} />
             </Grid>
           </Grid>
         </Box>
