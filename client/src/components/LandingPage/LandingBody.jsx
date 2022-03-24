@@ -1,8 +1,18 @@
 /* eslint-disable import/no-anonymous-default-export */
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-
-export default () => {
+import { Link } from 'react-router-dom';
+import { Row } from '@mui-treasury/components/flex';
+import Button from '@mui/material/Button';
+export default ({ loggedInUser }) => {
+  const buttonStyle = {
+    ':hover': {
+      bgcolor: '#ef5350 !important',
+      color: 'white',
+    },
+    color: '#fff',
+    fontWeight: 'bold'
+  }
 
   const welcomeStyle = {
     color: '#fff',
@@ -30,6 +40,10 @@ export default () => {
         }}
       >
         Welcome to OnlyPans
+        {
+          loggedInUser != "no user" &&
+          (" " + loggedInUser.firstName)
+        }
       </Typography>
       <Typography variant="h4" component="div"
         style={metaStyle}
@@ -39,8 +53,30 @@ export default () => {
       >
         Access our collection of recipes made by our community of bloggers
       </Typography>
-      <div>
-      </div>
+      {
+        loggedInUser != "no user" &&
+        <ul className='navlinks pt-3 px-5'>
+            <li className='list-unstyled pe-5'>
+              <Button component={Link} to={`/dashboard/${loggedInUser.user_id}`}
+                sx={buttonStyle} 
+              ><Typography variant="h4" component="div"
+              sx={{
+                fontSize: '1.5rem',
+              }}
+            >Home</Typography></Button>
+            </li>
+          
+          <li className='list-unstyled pe-5'>
+            <Button component={Link} to='/recipes'
+              sx={buttonStyle}
+            ><Typography variant="h4" component="div"
+            sx={{
+              fontSize: '1.5rem',
+            }}
+          >Blog</Typography></Button>
+          </li>
+        </ul>
+      }
     </div>
   );
 };

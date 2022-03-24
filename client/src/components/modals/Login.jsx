@@ -38,7 +38,7 @@ const Copyright = (props) => {
 // eslint-disable-next-line no-unused-vars
 const theme = createTheme();
 
-export default ({ handleClose, setLoggedInUser }) => {
+export default ({ handleClose, setLoggedInUser, changeOpen}) => {
   const [errors, setErrors] = useState("");
   const [loginInfo, setLoginInfo] = useState({
     email: "",
@@ -71,6 +71,7 @@ export default ({ handleClose, setLoggedInUser }) => {
   };
 
   const googleSuccess = async (res) => {
+    console.log(res.profileObj)
     axios.post('http://localhost:8080/api/google/login', res.profileObj)
       .then(res => {
         Cookies.set("user_id", res.data, { path: '/' })
@@ -175,8 +176,15 @@ export default ({ handleClose, setLoggedInUser }) => {
             }}
           >
             <Grid item sx={{ textAlign: 'center' }}>
+            <Button
+            type="button"
+            fullWidth
+            onClick={(e) => changeOpen(e, "register")}
+            sx={{ mt: 3, mb: 2, }}
+          >
               Don't have an Account?
-              <RegistrationModal variant="body2" setLoggedInUser={setLoggedInUser} />
+          </Button>
+              
             </Grid>
           </Grid>
         </Box>

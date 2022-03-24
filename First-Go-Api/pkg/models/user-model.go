@@ -15,13 +15,22 @@ import (
 var db *gorm.DB
 var mySigningKey = []byte("mysupersecretphrase")
 
+type GoogleUser struct {
+	Email      string `json: "email"`
+	FamilyName string `json : "familyName"`
+	GivenName  string `json :"givenName"`
+	GoogleId   string `json: "googleId"`
+	ImageUrl   string `json : "imageUrl"`
+}
+
 type User struct {
 	gorm.Model
-	FirstName     string        `gorm:"not null" json:"firstName"`
-	LastName      string        `json:"lastName"`
-	Email         string        `"json:"email"`
-	Password      string        `"json:"password"`
-	ProfileAvatar string        `json:"profileAvatar"`
+	FirstName     string `gorm:"not null" json:"firstName"`
+	LastName      string `json:"lastName"`
+	Email         string `"json:"email"`
+	Password      string `"json:"password"`
+	ProfileAvatar string `json:"profileAvatar"`
+	GoogleUser    bool
 	Recipes       []Recipe      `gorm: "foreignKey: user_id "`
 	Users         []User        `gorm: "foreignKey: user_id "`
 	LikedRecipe   []LikedRecipe `gorm: "foreignKey: user_id "`
@@ -77,8 +86,9 @@ func CheckPasswordHash(password, hash string) bool {
 func GenerateJwt(user *User) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
+	claims["profileAvatar"] = user.ProfileAvatar
 	claims["user_id"] = user.ID
-	claims["firstname"] = user.FirstName
+	claims["firstName"] = user.FirstName
 	claims["lastName"] = user.LastName
 	claims["email"] = user.Email
 	claims["exp"] = time.Now().Add(time.Hour * 100).Unix()
@@ -114,11 +124,11 @@ func ValidUser(user *User) (map[string]string, int) {
 	return err, len(err)
 }
 
-func GetUserByEmail(user *User) (*User, error) {
+func GetUserByEmail(email string) (*User, error) {
 	var User User
-	db.Find(&User, "email = ?", user.Email)
+	db.Find(&User, "email = ?", email)
 	if User.Email == "" {
-		err := errors.New("invalid email or password")
+		err := errors.New("no user")
 		return &User, err
 	}
 	return &User, errors.New("nil")

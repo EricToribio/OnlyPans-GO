@@ -14,7 +14,7 @@ import Cookies from 'js-cookie';
 export default ({ username, id, avatar,setLogout }) => {
 
   const logout = () => {
-   Cookies.remove("user_id")
+  Cookies.remove("user_id")
     setLogout("no user")
   };
 
@@ -35,7 +35,7 @@ export default ({ username, id, avatar,setLogout }) => {
       color: '#ffc107',
     },
   };
-
+console.log(avatar)
   return (
     <div className=''>
       <div className="wrapper d-flex align-items-stretch">
@@ -86,7 +86,8 @@ export default ({ username, id, avatar,setLogout }) => {
             <div className="avatar-upload">
               <Link to='#'>
                 <img src={avatar}
-                  alt="{name}" className="img logo rounded-circle mb-1"
+                  alt="{name}
+                  " className="img logo rounded-circle mb-1"
                   style={avatarSize}></img>
               </Link>
               <ImgUploadModal
@@ -102,15 +103,15 @@ export default ({ username, id, avatar,setLogout }) => {
                 <Link to="/recipes">Blog</Link>
               </li>
               <li className="active">
-                <Link to="#homeSubmenu" data-toggle="collapse" aria-expanded="false" className="dropdown-toggle">Collection</Link>
-                <ul className="list-unstyled components ps-2">
+                
+              
                   <li>
                     <Link to="#">Users Liked</Link>
                   </li>
                   <li>
                     <Link to={`/dashboard/favorites/${id}`}>Favorite Recipes</Link>
                   </li>
-                </ul>
+           
               </li>
               <li>
                 {/* <Link to="/user/edit/:id">Edit Info</Link> */}

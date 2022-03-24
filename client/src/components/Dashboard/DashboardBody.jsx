@@ -64,7 +64,7 @@ export default function BasicTabs({ user }) {
   const [recipe, setRecipe] = useState([]);
   const [value, setValue] = React.useState(0);
   const theme = useTheme();
-
+  
   // useEffect(() => {
   //   axios.get(`http://localhost:8000/api/recipe/user/${user}`)
   //     .then(res => {
@@ -100,7 +100,7 @@ export default function BasicTabs({ user }) {
 
   return (
     <div className='d-flex justify-content-center'>
-      <Box sx={{ bgcolor: 'background.paper', width: 750 }}>
+      <Box sx={{ bgcolor: 'background.paper', width: "75% "}}>
         <AppBar position="static">
           <Tabs
             value={value}

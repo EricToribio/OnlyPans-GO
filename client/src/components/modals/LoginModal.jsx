@@ -19,27 +19,18 @@ const style = {
   p: 4,
 };
 
-export default function TransitionsModal({setLoggedInUser}) {
+export default function TransitionsModal({setLoggedInUser,changeOpen,loginOpen}) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const buttonStyle = {
-    ':hover': {
-      bgcolor: '#ef5350', // theme.palette.primary.main
-      color: 'white',
-    },
-    color: '#fff',
-    fontWeight: 'bold'
-  }
+  React.useEffect(() => {
+    loginOpen && handleOpen()
+    !loginOpen && handleClose()
+  },[loginOpen])
 
   return (
     <div>
-      <Button onClick={handleOpen}
-        sx={buttonStyle}
-      >
-        Log In
-      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -54,7 +45,7 @@ export default function TransitionsModal({setLoggedInUser}) {
         <Fade in={open}>
           <Box sx={style}>
             {/* ENTER LOGIN HERE */}
-            <Login handleClose={handleClose} setLoggedInUser={setLoggedInUser}/>
+            <Login handleClose={handleClose} setLoggedInUser={setLoggedInUser} changeOpen={changeOpen}/>
           </Box>
         </Fade>
       </Modal>

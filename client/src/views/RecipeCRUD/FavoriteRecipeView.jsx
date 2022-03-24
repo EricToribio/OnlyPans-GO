@@ -8,10 +8,11 @@ import ToggleColorMode from '../../components/Themes/ToggleDarkMode';
 import { ThemeProvider } from '@material-ui/styles';
 import { createTheme } from '@material-ui/core';
 import Cookies from 'js-cookie';
-
+import Header from '../../components/LandingPage/Header';
+import NavLinks from '../../components/LandingPage/NavLinks';
 const baseTheme = createTheme();
 
-export const FavoriteRecipeView = () => {
+export const FavoriteRecipeView = ({loggedInUser,setLoggedInUser}) => {
   const [user, setUser] = useState(false);
   const [logout, setLogout] = useState();
   const history = useHistory();
@@ -24,12 +25,22 @@ export const FavoriteRecipeView = () => {
 
   return (
     <div>
-      <div className='position-fixed'>
-        <SideNav setLogout={setLogout}
+      <div className='d-flex align-items-center justify-content-between'>
+        <div className='d-flex justify-content-start'>
+          <Header currentPage='dashboard' id={loggedInUser.id}/>
+        </div>
+        <div className='d-flex justify-content-end'>
+          <div className='d-flex justify-content-evenly'>
+            <NavLinks  currentPage='dashboard'  loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
+          </div>
+        </div>
+        </div>
+      {/* <div className='position-fixed'> */}
+        {/* <SideNav setLogout={setLogout}
           avatar={user.profileAvatar}
           username={user.username}
           id={user._id} />
-      </div>
+      </div> */}
       <div className='dashboard-body'>
         <ToggleColorMode currentPage="dashboard">
           <ThemeProvider theme={baseTheme}>

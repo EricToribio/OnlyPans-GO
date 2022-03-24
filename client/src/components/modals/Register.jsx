@@ -30,7 +30,7 @@ const Copyright = (props) => {
 
 const theme = createTheme();
 
-export default ({ handleClose, setLoggedInUser}) => {
+export default ({ handleClose, setLoggedInUser,changeOpen}) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -54,25 +54,8 @@ export default ({ handleClose, setLoggedInUser}) => {
         console.log("response from registering", res);
         if (res.data.error) {
           setErrors(res.data.error)
-        // } else {
-        //   axios.post('http://localhost:8000/api/login', {
-        //     email: email,
-        //     password: password
-        //   }, { withCredentials: true })
-        //     .then(res => {
-        //       console.log(res)
-        //       if (res.data.message === "success!") {
-        //         setUser(res.data)
-                // handleClose()
-
-            //   } else if (res.data.message) {
-            //     console.log(res.data.message)
-            //     setErrors(res.data)
-            //   }
-            // })
-            // .catch(err => console.log(err))
-          // login()
         } else {
+          console.log("reg")
           Cookies.set("user_id", res.data, { path:  '/' })
           setLoggedInUser(jwt_decode(Cookies.get("user_id")))
           handleClose()
@@ -195,7 +178,7 @@ export default ({ handleClose, setLoggedInUser}) => {
           <Grid container justifyContent="center">
             <Grid item sx={{ textAlign: 'center' }}>
               Already have an Account?
-              <Button onClick={handleClose} variant="body2" >
+              <Button onClick={(e) => changeOpen(e, "login")} variant="body2" >
                 Log In
               </Button>
             </Grid>

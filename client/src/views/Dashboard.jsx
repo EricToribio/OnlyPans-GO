@@ -2,7 +2,8 @@
 import * as React from 'react';
 import { useState, useEffect } from "react"
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
+import Header from '../components/LandingPage/Header'
+import NavLinks from '../components/LandingPage/NavLinks'
 import ToggleColorMode from '../components/Themes/ToggleDarkMode';
 import SideNav from '../components/Dashboard/SideNav';
 import DashboardBody from '../components/Dashboard/DashboardBody';
@@ -13,29 +14,34 @@ const baseTheme = createTheme();
 
 export default ({loggedInUser, setLoggedInUser}) => {
   const history = useHistory();
-
+  const [activeLink, setActiveLink] = useState(localStorage.getItem("active") ? localStorage.getItem("active") : localStorage.setItem('active', "Overview"))
   useEffect(() => {
         loggedInUser == "no user" &&
         history.push('/') 
   }, [loggedInUser]);
   
-
   return (
     <div className=''>
-      <div className='position-fixed'>
-        <SideNav setLogout={setLoggedInUser}
-          avatar={loggedInUser.profileAvatar}
-          username={loggedInUser.username}
-          id={loggedInUser._id} />
-      </div>
+      <div className='d-flex align-items-center justify-content-between'>
+        <div className='d-flex justify-content-start'>
+          <Header currentPage='dashboard' id={loggedInUser.id}/>
+        </div>
+        <div className='d-flex justify-content-end'>
+          <div className='d-flex justify-content-evenly'>
+            <NavLinks activeLink={activeLink} currentPage='dashboard'  loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
+          </div>
+        </div>
+        </div>
+      
+    
       <div className='dashboard-body'>
-        <ToggleColorMode currentPage="dashboard">
-          <ThemeProvider theme={baseTheme}>
+        {/* <ToggleColorMode currentPage="dashboard">
+          <ThemeProvider theme={baseTheme}> */}
             <div className="App">
               <DashboardBody user={loggedInUser._id} />
             </div>
-          </ThemeProvider>
-        </ToggleColorMode>
+          {/* </ThemeProvider>
+        </ToggleColorMode> */}
       </div>
     </div>
   );

@@ -61,6 +61,20 @@ export default ({ currentPage, id }) => {
                   </Typography>
                 </span>
                 :
+                currentPage === 'dashboard' ?
+                <span className='h1 fw-bold text-dark pe-5'>
+                  <Typography
+                   variant="h3"
+                   component={Link} to={`/dashboard/${id}`}
+                    sx={{ 
+                      color: 'text.primary' ,
+                      textDecoration:'none'
+                      
+                      }}>
+                    N L Y P A N S
+                  </Typography>
+                </span>
+                :
                 <></>
           }
         </InfoTitle>

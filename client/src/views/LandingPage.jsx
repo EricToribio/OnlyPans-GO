@@ -35,7 +35,7 @@ export default ({loggedInUser, setLoggedInUser}) => {
           </div>
         </div>
       </div>
-      <LandingBody />
+      <LandingBody loggedInUser={loggedInUser}/>
     </div>
   );
 };
