@@ -8,8 +8,8 @@ import ToggleColorMode from '../components/Themes/ToggleDarkMode';
 import SideNav from '../components/Dashboard/SideNav';
 import DashboardBody from '../components/Dashboard/DashboardBody';
 import { createTheme } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/styles";
-
+import Cookies from 'js-cookie'
+import { Button } from '@mui/material';
 const baseTheme = createTheme();
 
 export default ({loggedInUser, setLoggedInUser}) => {
@@ -19,18 +19,35 @@ export default ({loggedInUser, setLoggedInUser}) => {
         loggedInUser == "no user" &&
         history.push('/') 
   }, [loggedInUser]);
-  
+
+  const logout = () => {
+    Cookies.remove("user_id")
+    setLoggedInUser("no user")
+  }
+  const dashboardStyle ={
+    ':hover': {
+      bgcolor: '#ef5350 !important',
+      color: '#000000',
+    },
+    color: '#000000',
+    fontWeight: 'bold'
+  }
   return (
-    <div className=''>
+    <div className='container'>
       <div className='d-flex align-items-center justify-content-between'>
         <div className='d-flex justify-content-start'>
           <Header currentPage='dashboard' id={loggedInUser.id}/>
         </div>
-        <div className='d-flex justify-content-end'>
+        {/* <div className='d-flex justify-content-end'> */}
           <div className='d-flex justify-content-evenly'>
             <NavLinks activeLink={activeLink} currentPage='dashboard'  loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
           </div>
-        </div>
+          <div className=''>
+          <Button onClick={logout}
+                sx={dashboardStyle}
+                >Log out</Button>
+          </div>
+        {/* </div> */}
         </div>
       
     

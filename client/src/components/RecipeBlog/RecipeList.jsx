@@ -18,10 +18,10 @@ import StickyFooter from './StickyFooter';
 // import ShareIcon from '@mui/icons-material/Share';
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-export default ({ user }) => {
+export default ({ user, sortTag, setSortTag }) => {
   const [recipes, setRecipes] = useState([]);
   const [sortBy, setSortBy] = useState('');
-  const [sortTag, setSortTag] = useState('All POSTS');
+  
 
   useEffect(() => {
     axios.get('http://localhost:8000/api/recipe')
@@ -46,10 +46,9 @@ export default ({ user }) => {
   };
   
 
-  const linkStyle = {
+  const linkBase = {
     fontFamily: 'Open Sans',
     fontWeight: 'normal',
-    color: '#000',
     textTransform: 'capitalize',
     p: 0,
     ':hover': {
@@ -67,97 +66,48 @@ export default ({ user }) => {
     objectFit: 'cover',
     height: 60,
   }
+  const links = [
+    {tag : 'ALL POST', by : ''},
+    {tag : 'Breakfast', by : 'breakfast'},
+    {tag : 'Lunch', by : 'lunch'},
+    {tag : 'Dinner', by : 'dinner'},
+    {tag : 'Quick & Easy', by : 'quick'},
+    {tag : 'Wine And Dine', by : 'wineAndDine'},
+    {tag : "Baked Goods", by : 'bakedGoods'}
+  ]
+
+  
 
   return (
-    <div className='blog-body'>
-      <h4 className='body-title text-center'>{sortTag}</h4>
-      <div className='mt-5'>
+    <div style={{ 
+      marginTop : '-175px'
+    }}>
+      
+      <div className=''>
         <ul className='categories-list 
         d-flex align-items-center justify-content-center gap-4 px-0'>
-          <li>
+         {
+           links.map((item, i) => {
+            let linkStyle =``
+            sortBy === item.by ? (linkStyle += "text-danger"):
+              (linkStyle += "text-dark text-decoration-none }");
+             return(
+            <li>
             <Button component={Link} to='#'
+              sx={linkBase}
+              className={linkStyle}
               onClick={(e) => {
-                setSortTag('All POSTS')
-                setSortBy('')
-              }}
-              sx={linkStyle}
-              className=''
-            >
-              All Posts
-            </Button>
-          </li>
-          <li>
-            <Button component={Link} to='#'
-              sx={linkStyle}
-              className=''
-              onClick={(e) => {
-                setSortTag('Breakfast')
-                setSortBy('breakfast')
+                setSortTag(item.tag)
+                setSortBy(item.by)
               }}
             >
-              Breakfast
+              {item.tag}
             </Button>
           </li>
-          <li>
-            <Button component={Link} to='#'
-              sx={linkStyle}
-              onClick={(e) => {
-                setSortTag('Lunch')
-                setSortBy('lunch')
-              }}
-              className=''
-            >
-              Lunch
-            </Button>
-          </li>
-          <li>
-            <Button component={Link} to='#'
-              sx={linkStyle}
-              className=''
-              onClick={(e) => {
-                setSortTag('Dinner')
-                setSortBy('dinner')
-              }}
-            >
-              Dinner
-            </Button>
-          </li>
-          <li>
-            <Button component={Link} to='#'
-              sx={linkStyle}
-              className=''
-              onClick={(e) => {
-                setSortTag('Quick & Easy')
-                setSortBy('quick')
-              }}
-            >
-              Quick & Easy
-            </Button>
-          </li>
-          <li>
-            <Button component={Link} to='#'
-              sx={linkStyle}
-              className=''
-              onClick={(e) => {
-                setSortTag('Wine And Dine')
-                setSortBy('wineAndDine')
-              }}
-            >
-              Wine & Dine
-            </Button>
-          </li>
-          <li>
-            <Button component={Link} to='#'
-              sx={linkStyle}
-              className=''
-              onClick={(e) => {
-                setSortTag('Baked Goods')
-                setSortBy('bakedGoods')
-              }}
-            >
-              Baked Goods
-            </Button>
-          </li>
+           )})
+         }
+         
+          
         </ul>
       </div>
       <div className='all-posts 
@@ -196,8 +146,9 @@ export default ({ user }) => {
                     // }
                     title={
                       <Button component={Link} to={`/recipe/${recipe._id}`}
-                        sx={linkStyle}
+                        sx={linkBase}
                         style={{
+                          color : '#0000',
                           fontWeight: 'bold',
                           lineHeight: 'normal',
                           marginBottom: '5px',

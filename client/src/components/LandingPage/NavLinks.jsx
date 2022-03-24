@@ -1,18 +1,20 @@
 /* eslint-disable import/no-anonymous-default-export */
 import * as React from 'react';
-import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom';
+
 import { Row } from '@mui-treasury/components/flex';
 import Button from '@mui/material/Button';
 import LoginModal from '../modals/LoginModal'
 import RegistrationModal from '../modals/RegistrationModal'
 import EditUserModal from '../modals/EditUserModal'
 import Cookies from 'js-cookie';
+import { useHistory } from 'react-router-dom';
 
 export default ({ loggedInUser, setLoggedInUser,currentPage}) => {
 const [loginOpen, setLoginOpen] = React.useState(false)
 const [registerOpen, setRegisterOpen] = React.useState(false)
 const [activeLink, setActiveLink] = React.useState(localStorage.getItem("active") ? localStorage.getItem("active") : localStorage.setItem('active', "Overview"))
-
+const history = useHistory()
 const links =[
   {link : `/dashboard/${loggedInUser.user_id}` , name : "Overview"},
   {link: "/recipes", name : 'Blog'},
@@ -95,7 +97,7 @@ const inactive = {
           {
             currentPage === 'dashboard' ?
             
-            <div className="d-flex gap-4">
+            <div className="d-flex gap-3">
             {links.map((item,i) => {
               console.log(activeLink)
                let linkStyle =``
@@ -103,20 +105,21 @@ const inactive = {
                  (linkStyle += "text-dark text-decoration-none }");
               return(
                 <li  >
-                  <a href={item.link} className={linkStyle} onClick={(e)=> setActiveLink(localStorage.setItem('active', item.name))}>{item.name}</a>
+                  <Link to={item.link} className={linkStyle} onClick={(e)=>
+                    setActiveLink(localStorage.setItem('active', item.name))
+                   
+                    }>{item.name}</Link>
                 </li>
               )
               })}
           <li>
             {/* <Link to="/user/edit/:id">Edit Info</Link> */}
-            <EditUserModal
+            {/* <EditUserModal
               setLogout={logout}
-              >Edit Info</EditUserModal>
+              >Edit Info</EditUserModal> */}
           </li>
               <li>
-                <Button onClick={logout}
-                sx={dashboardStyle}
-                >Log out</Button>
+                
               </li>
             </div>:
 <Button onClick={logout}

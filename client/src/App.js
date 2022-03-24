@@ -72,7 +72,7 @@ export default () => {
           </Route>
           {/* Recipe Routes */}
           <Route exact path='/recipes'>
-            <Main />
+            <Main  loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
           </Route>
           <Route exact path='/:category/recipes'>
             <CategoryViewAll />
