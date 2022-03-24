@@ -11,7 +11,7 @@ export default ({loggedInUser, setLoggedInUser}) => {
   const [user, setUser] = useState("");
   const history = useHistory();
   const [activeLink, setActiveLink] = useState(localStorage.getItem("active") ? localStorage.getItem("active") : localStorage.setItem('active', "Overview"))
-  const [sortTag, setSortTag] = useState('All POSTS');
+  const [sortTag, setSortTag] = useState('Beef');
   useEffect(() => {
     !Cookies.get("user_id") &&
         history.push('/')
@@ -44,7 +44,7 @@ export default ({loggedInUser, setLoggedInUser}) => {
           </div>
         </div>
       <BlogHeader sortTag={sortTag}  user={user} pageComponent='viewallrecipes' />
-      <RecipeList sortTag={sortTag} setSortTag={setSortTag} user={user} />
+      <RecipeList lsortTag={sortTag} setSortTag={setSortTag} user={loggedInUser} />
     </div>
   )
 };

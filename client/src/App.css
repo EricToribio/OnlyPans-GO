@@ -11909,9 +11909,10 @@ a[data-toggle="collapse"] {
 }
 
 .recipe-card {
-  min-height: 446.05px;
-  max-height: 446.05px;
+  min-height: 500px;
+  max-height: 500px;
   width: 345px;
+  
 }
 
 /* .one-recipe {
@@ -11926,10 +11927,6 @@ a[data-toggle="collapse"] {
   width: 180px;
 }
 
-.all-posts,
-.fave-recipes {
-  width: 940px;
-}
 
 .fave-recipes {
   padding: 30px;

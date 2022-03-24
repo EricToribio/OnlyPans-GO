@@ -16,21 +16,26 @@ import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import StickyFooter from '../../components/RecipeBlog/StickyFooter';
 import Cookies from 'js-cookie';
-
-const Detail = () => {
+import Header from '../../components/LandingPage/Header'
+import NavLinks from '../../components/LandingPage/NavLinks'
+// import Header from '../../components/RecipeBlog/Header'
+// import NavLinks from '../../components/RecipeBlog/NavLinks'
+const Detail = ({loggedInUser, setLoggedInUser}) => {
   const [recipe, setRecipe] = useState({})
   const { id } = useParams();
   const history = useHistory();
   const [user, setUser] = useState('');
-
+ 
+  const [activeLink, setActiveLink] = useState(localStorage.getItem("active") ? localStorage.getItem("active") : localStorage.setItem('active', "Overview"))
   useEffect(() => {
     !Cookies.get("user_id") &&
         history.push('/')
-        
-  
-    // axios.get('http://localhost:8000/api/recipe/' + id)
-    //   .then(res => setRecipe(res.data))
-    //   .catch(err => console.error(err));
+      axios.get('https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + id)
+      .then(res => {
+        console.log(res.data)
+        setRecipe(res.data.meals[0])
+      })
+      .catch(err => console.error(err));
   }, []);
 
   const onFavoriteHandler = (id, img, name) => {
@@ -67,13 +72,36 @@ const Detail = () => {
     objectFit: 'cover',
     height: 60,
   }
-
-  let made = recipe.createdAt,
-    createdDate = (new Date(made)).toLocaleString();
-
+  const logout = () => {
+    Cookies.remove("user_id")
+    setLoggedInUser("no user")
+  }
+  const dashboardStyle ={
+    ':hover': {
+      bgcolor: '#ef5350 !important',
+      color: '#000000',
+    },
+    color: '#000000',
+    fontWeight: 'bold'
+  }
   return (
     <div className='container'>
-      <BlogHeader user={user}
+       <div className='d-flex align-items-center justify-content-between'>
+        <div className='d-flex justify-content-start'>
+          <Header currentPage='dashboard' id={loggedInUser.user_id}/>
+        </div>
+        {/* <div className='d-flex justify-content-end'> */}
+          <div className='d-flex justify-content-evenly'>
+            <NavLinks activeLink={activeLink} currentPage='dashboard'  loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
+          </div>
+          <div className=''>
+          <Button onClick={logout}
+                sx={dashboardStyle}
+                >Log out</Button>
+          </div>
+        {/* </div> */}
+        </div>
+      <BlogHeader sortTag={recipe.strMeal}
         pageComponent='viewonerecipe' />
       <div className='one-recipe mx-auto 
       d-flex align-items-center
@@ -85,34 +113,8 @@ const Detail = () => {
 
         }}>
           <div className="recipe-header 
-            d-flex align-items-center justify-content-between pb-2">
-            <CardHeader
-              avatar={
-                <Link to='#'
-                // {`/user/${user._id}`}
-                >
-                  <img src={user.profileAvatar}
-                    alt="{name}" className="img logo rounded-circle mb-1"
-                    style={avatarSize}></img>
-                </Link>
-              }
-              title={
-                <Button component={Link} to={`/recipe/${recipe._id}`}
-                  sx={linkStyle}
-                  style={{
-                    fontWeight: 'bold',
-                    lineHeight: 'normal',
-                    marginBottom: '5px',
-                    display: '-webkit-box',
-                    overflow: 'hidden',
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 2,
-                  }}>
-                  {recipe.name}
-                </Button>
-              }
-              subheader={createdDate}
-            />
+            d-flex align-items-center justify-content-between ">
+              <h4>Add To Favorites</h4>
             <CardActions disableSpacing>
               <IconButton aria-label="add to favorites"
                 onClick={(e) => onFavoriteHandler(recipe._id, recipe.image, recipe.name)}
@@ -129,8 +131,8 @@ const Detail = () => {
             <CardMedia
               component="img"
               height="400"
-              image={recipe.image}
-              alt={recipe.name}
+              image={recipe.strMealThumb}
+              alt={recipe.strMeal}
             />
             
             <CardContent>
@@ -139,20 +141,7 @@ const Detail = () => {
                 color="text.secondary"
                 sx={{ marginBottom: 1 }}>
                 <strong>Category: </strong>
-                {
-                  recipe.category === 'breakfast' ?
-                    'Breakfast' :
-                    recipe.category === 'lunch' ?
-                      'Lunch' :
-                      recipe.category === 'dinner' ?
-                        'Dinner' :
-                        recipe.category === 'quick' ?
-                          'Quick & Easy' :
-                          recipe.category === 'wineAndDine' ?
-                            'Wine & Dine' :
-                            recipe.category === 'bakedGoods' &&
-                            'Baked Goods'
-                }
+               {recipe.strCategory}
               </Typography>
               <Typography paragraph
                 variant="body2"

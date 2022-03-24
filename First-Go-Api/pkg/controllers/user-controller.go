@@ -30,6 +30,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	} else if models.FindUserByEmail(CreateUser.Email) == true {
 		user, _ := models.GetUserByEmail(CreateUser.Email)
 		if user.GoogleUser {
+			fmt.Println("google")
 			res := map[string]map[string]string{
 				"error": {"email": "Please sign in with Google"},
 			}
@@ -69,15 +70,15 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 		e, _ := json.Marshal(res)
 		w.Write(e)
-	} else if !models.CheckPasswordHash(PotentialLogin.Password, user.Password) {
-		res := map[string]string{
-			"error": "Invalid Email or Password",
-		}
-		e, _ := json.Marshal(res)
-		w.Write(e)
 	} else if user.GoogleUser {
 		res := map[string]string{
 			"error": "Sign in Using Google Login",
+		}
+		e, _ := json.Marshal(res)
+		w.Write(e)
+	} else if !models.CheckPasswordHash(PotentialLogin.Password, user.Password) {
+		res := map[string]string{
+			"error": "Invalid Email or Password",
 		}
 		e, _ := json.Marshal(res)
 		w.Write(e)

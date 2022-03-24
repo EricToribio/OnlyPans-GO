@@ -20,13 +20,24 @@ import StickyFooter from './StickyFooter';
 
 export default ({ user, sortTag, setSortTag }) => {
   const [recipes, setRecipes] = useState([]);
-  const [sortBy, setSortBy] = useState('');
-  
+  const [sortBy, setSortBy] = useState('Beef');
+  const [links, setLinks] = useState([])
 
   useEffect(() => {
-    axios.get('http://localhost:8000/api/recipe')
-      .then(res => setRecipes(res.data));
+    axios.get('https://www.themealdb.com/api/json/v1/1/categories.php')
+      .then(res => {
+        console.log(res.data)
+        setLinks(res.data.categories)})
+        .catch(err => console.log(err))
   }, []);
+  useEffect(() => {
+    axios.get('https://www.themealdb.com/api/json/v1/1/filter.php?c='+sortBy)
+    .then(res => {
+      console.log(res.data)
+      setRecipes(res.data.meals)
+    })
+    .catch(err => console.log(err))
+  },[sortBy])
 
   const removeFromDom = recipeId => {
     setRecipes(recipes.filter(recipe => recipe._id !== recipeId))
@@ -66,18 +77,7 @@ export default ({ user, sortTag, setSortTag }) => {
     objectFit: 'cover',
     height: 60,
   }
-  const links = [
-    {tag : 'ALL POST', by : ''},
-    {tag : 'Breakfast', by : 'breakfast'},
-    {tag : 'Lunch', by : 'lunch'},
-    {tag : 'Dinner', by : 'dinner'},
-    {tag : 'Quick & Easy', by : 'quick'},
-    {tag : 'Wine And Dine', by : 'wineAndDine'},
-    {tag : "Baked Goods", by : 'bakedGoods'}
-  ]
-
   
-
   return (
     <div style={{ 
       marginTop : '-175px'
@@ -89,7 +89,7 @@ export default ({ user, sortTag, setSortTag }) => {
          {
            links.map((item, i) => {
             let linkStyle =``
-            sortBy === item.by ? (linkStyle += "text-danger"):
+            sortBy === item.strCategory ? (linkStyle += "text-danger"):
               (linkStyle += "text-dark text-decoration-none }");
              return(
             <li>
@@ -97,11 +97,11 @@ export default ({ user, sortTag, setSortTag }) => {
               sx={linkBase}
               className={linkStyle}
               onClick={(e) => {
-                setSortTag(item.tag)
-                setSortBy(item.by)
+                setSortTag(item.strCategory)
+                setSortBy(item.strCategory)
               }}
             >
-              {item.tag}
+              {item.strCategory}
             </Button>
           </li>
            )})
@@ -110,66 +110,28 @@ export default ({ user, sortTag, setSortTag }) => {
           
         </ul>
       </div>
-      <div className='all-posts 
+      <div className='
       d-flex align-items-center
       justify-content-center mt-5 gap-5 flex-wrap'>
         {
-          recipes.filter((recipe) => {
-            if (sortBy === '') {
-              return recipe
-            } else if (recipe.category.toLowerCase().includes(sortBy.toLowerCase())) {
-              return recipe
-            }
-          }).map((recipe, index) => {
-            let made = recipe.createdAt,
-              createdDate = (new Date(made)).toLocaleString();
+          recipes.map((recipe, index) => {
+            
             return (
               <div className="recipe-card">
                 <Card key={index}
                   sx={{
                     maxWidth: 345,
                   }}>
-                  <CardHeader
-                    avatar={
-                      <Link to='#'
-                      // {`/user/${user._id}`}
-                      >
-                        <img src={user.profileAvatar}
-                          alt="{name}" className="img logo rounded-circle mb-1"
-                          style={avatarSize}></img>
-                      </Link>
-                    }
-                    // action={
-                    //   <IconButton aria-label="settings">
-                    //     <MoreVertIcon />
-                    //   </IconButton>
-                    // }
-                    title={
-                      <Button component={Link} to={`/recipe/${recipe._id}`}
-                        sx={linkBase}
-                        style={{
-                          color : '#0000',
-                          fontWeight: 'bold',
-                          lineHeight: 'normal',
-                          marginBottom: '5px',
-                          display: '-webkit-box',
-                          overflow: 'hidden',
-                          WebkitBoxOrient: 'vertical',
-                          WebkitLineClamp: 2,
-                        }}>
-                        {recipe.name}
-                      </Button>
-                    }
-                    subheader={createdDate}
-                  />
-                  <Link to={`/recipe/${recipe._id}`}>
+                    <Link to={`/recipe/${recipe.idMeal}`} className='text-decoration-none'>
+                 
+                        <h4 className='text-center'>{recipe.strMeal}</h4>
+                  
                     <CardMedia
                       component="img"
                       height="194"
-                      image={recipe.image}
-                      alt={recipe.name}
+                      image={recipe.strMealThumb}
+                      alt={recipe.strMeal}
                     />
-                  </Link>
                   <CardContent>
                     <Typography
                       variant="body2"
@@ -180,42 +142,23 @@ export default ({ user, sortTag, setSortTag }) => {
                         WebkitBoxOrient: 'vertical',
                         WebkitLineClamp: 3,
                       }}>
-                      {recipe.description}
+                      See Full Recipe
                     </Typography>
                   </CardContent>
                   <CardActions disableSpacing>
-                    {
-                      user._id === recipe._id ?
-                        <Link to={'/recipe/edit/' + recipe._id}>
-                          Edit Recipe
+                     <IconButton aria-label="share">
+                    </IconButton> 
+                   </CardActions>
                         </Link>
-                        |
-                        <DeleteButton
-                          recipeId={recipe._id}
-                          successCallback={() => removeFromDom(recipe._id)}
-                        />
-                        : <></>
-                    }
-                    <Button
-                      onClick={(e) => onFavoriteHandler(recipe._id, recipe.image, recipe.name)}
-                    >
-                      <IconButton aria-label="add to favorites">
-                        <FavoriteIcon />
-                      </IconButton>
-                    </Button>
-                    {/* <IconButton aria-label="share">
-                      <ShareIcon />
-                    </IconButton> */}
-                  </CardActions>
                 </Card>
               </div>
             )
           })
         }
-      </div>
+      </div> 
       <div className='mt-5'>
         <StickyFooter />
-      </div>
+      </div> 
     </div>
   )
 }

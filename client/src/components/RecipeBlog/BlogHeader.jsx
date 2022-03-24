@@ -77,13 +77,14 @@ export default ({sortTag}) => {
                 border: '5px solid #000',
                 bgcolor: '#fff',
               }}>
-                <h1
+                <h2
                   style={{
                     height: 80,
                     width: 'auto',
                     padding: '10px 20px 18px',
                   }}
-                > {sortTag}</h1>
+                  className='text-center overflow-hidden'
+                > {sortTag}</h2>
               </Item>
             </div>
           </div>

@@ -81,7 +81,7 @@ export default () => {
             <Create />
           </Route>
           <Route exact path='/recipe/:id'>
-            <Detail />
+            <Detail  loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
           </Route>
           <Route exact path='/recipe/edit/:id'>
             <Update />
