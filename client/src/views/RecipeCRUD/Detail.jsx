@@ -20,36 +20,56 @@ import Header from '../../components/LandingPage/Header'
 import NavLinks from '../../components/LandingPage/NavLinks'
 // import Header from '../../components/RecipeBlog/Header'
 // import NavLinks from '../../components/RecipeBlog/NavLinks'
-const Detail = ({loggedInUser, setLoggedInUser}) => {
+const Detail = ({ loggedInUser, setLoggedInUser }) => {
   const [recipe, setRecipe] = useState({})
   const { id } = useParams();
   const history = useHistory();
   const [user, setUser] = useState('');
- 
+  const [liked,setLiked] = useState(false)
+
   const [activeLink, setActiveLink] = useState(localStorage.getItem("active") ? localStorage.getItem("active") : localStorage.setItem('active', "Overview"))
   useEffect(() => {
     !Cookies.get("user_id") &&
-        history.push('/')
-      axios.get('https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + id)
+      history.push('/')
+    axios.get('https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + id)
       .then(res => {
         console.log(res.data)
         setRecipe(res.data.meals[0])
       })
       .catch(err => console.error(err));
-  }, []);
+     loggedInUser.likedRecipes.map((item) => {
+       console.log(item.Recipe_id, recipe.idMeal)
+       if(item.Recipe_id === recipe.idMeal){
+         setLiked(true)
+       }
+     })
+  }, [liked]);
 
-  const onFavoriteHandler = (id, img, name) => {
-    let newFavorite = { id, img, name }
-    let favorites = [...user.favoriteRecipe, newFavorite]
-    axios.put(`http://localhost:8000/api/user/update/${user._id}`, {
-      favoriteRecipe: favorites
-    })
+  const onFavoriteHandler = (id, img, name, category) => {
+
+    axios.post(`http://localhost:8080/api/new/recipe`, {
+      recipe_id: id,
+      name: name,
+      image: img,
+      category: category,
+      user_id: loggedInUser.user_id
+    } )
       .then(res => {
         console.log(res)
       }).catch(err => {
         console.log(err)
       });
   };
+  const onFavoriteDelete = (id) => {
+    axios.post('http://localhost:8080/api/delete/recipe',{
+      recipe_id : id,
+      user_id: loggedInUser.user_id
+    })
+    .then(res => {
+      setLiked(false)
+    })
+    .catch(err => console.log(err))
+  }
 
   const linkStyle = {
     fontFamily: 'Open Sans',
@@ -72,11 +92,14 @@ const Detail = ({loggedInUser, setLoggedInUser}) => {
     objectFit: 'cover',
     height: 60,
   }
+
+  
+    
   const logout = () => {
     Cookies.remove("user_id")
     setLoggedInUser("no user")
   }
-  const dashboardStyle ={
+  const dashboardStyle = {
     ':hover': {
       bgcolor: '#ef5350 !important',
       color: '#000000',
@@ -86,21 +109,21 @@ const Detail = ({loggedInUser, setLoggedInUser}) => {
   }
   return (
     <div className='container'>
-       <div className='d-flex align-items-center justify-content-between'>
+      <div className='d-flex align-items-center justify-content-between'>
         <div className='d-flex justify-content-start'>
-          <Header currentPage='dashboard' id={loggedInUser.user_id}/>
+          <Header currentPage='dashboard' id={loggedInUser.user_id} />
         </div>
         {/* <div className='d-flex justify-content-end'> */}
-          <div className='d-flex justify-content-evenly'>
-            <NavLinks activeLink={activeLink} currentPage='dashboard'  loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
-          </div>
-          <div className=''>
-          <Button onClick={logout}
-                sx={dashboardStyle}
-                >Log out</Button>
-          </div>
-        {/* </div> */}
+        <div className='d-flex justify-content-evenly'>
+          <NavLinks activeLink={activeLink} currentPage='dashboard' loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser} />
         </div>
+        <div className=''>
+          <Button onClick={logout}
+            sx={dashboardStyle}
+          >Log out</Button>
+        </div>
+        {/* </div> */}
+      </div>
       <BlogHeader sortTag={recipe.strMeal}
         pageComponent='viewonerecipe' />
       <div className='one-recipe mx-auto 
@@ -114,17 +137,24 @@ const Detail = ({loggedInUser, setLoggedInUser}) => {
         }}>
           <div className="recipe-header 
             d-flex align-items-center justify-content-between ">
-              <h4>Add To Favorites</h4>
+            <h4>Add To Favorites</h4>
             <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites"
-                onClick={(e) => onFavoriteHandler(recipe._id, recipe.image, recipe.name)}
-                sx={{
-                  ':hover': {
-                    color: 'red'
-                  },
-                }}>
+              {
+                liked   ?
+                <IconButton aria-label="add to favorites"
+                onClick={(e) => onFavoriteDelete(recipe.idMeal,)}
+               sx={{color : 'red'}}>
                 <FavoriteIcon />
-              </IconButton>
+              </IconButton>:
+              <IconButton aria-label="add to favorites"
+              onClick={(e) => onFavoriteHandler(recipe.idMeal, recipe.strThumb, recipe.strMeal, recipe.strCategory)}
+             >
+              <FavoriteIcon />
+            </IconButton>
+                }
+                
+          
+           
             </CardActions>
           </div>
           <div className="recipe-body">
@@ -134,14 +164,13 @@ const Detail = ({loggedInUser, setLoggedInUser}) => {
               image={recipe.strMealThumb}
               alt={recipe.strMeal}
             />
-            
             <CardContent>
               <Typography paragraph
                 variant="body2"
                 color="text.secondary"
                 sx={{ marginBottom: 1 }}>
                 <strong>Category: </strong>
-               {recipe.strCategory}
+                {recipe.strCategory}
               </Typography>
               <Typography paragraph
                 variant="body2"
@@ -172,23 +201,6 @@ const Detail = ({loggedInUser, setLoggedInUser}) => {
                 {recipe.instructions}
               </Typography>
             </CardContent>
-            {
-              user._id === recipe.userId ?
-                <Button component={Link}
-                  to={`/recipe/edit/${recipe._id}`}
-                  sx={{
-                    paddingLeft: '16px',
-                    fontFamily: 'Open Sans',
-                    color: '#000',
-                    fontWeight: 'bold',
-                    ':hover': {
-                      color: '#ffc107'
-                    }
-                  }}>
-                  Edit Recipe
-                </Button>
-                : <></>
-            }
           </div>
         </Card>
       </div>

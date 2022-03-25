@@ -31,20 +31,14 @@ type User struct {
 	Password      string `"json:"password"`
 	ProfileAvatar string `json:"profileAvatar"`
 	GoogleUser    bool
-	Recipes       []Recipe      `gorm: "foreignKey: user_id "`
-	Users         []User        `gorm: "foreignKey: user_id "`
-	LikedRecipe   []LikedRecipe `gorm: "foreignKey: user_id "`
+	Recipes       []LikedRecipe `gorm: "foreignKey: user_id "`
 }
 
 func init() {
 	config.Connect()
 	db = config.GetDB()
-	db.AutoMigrate(&LikedUser{}, &LikedRecipe{}, &Recipe{}, &User{})
-	db.Debug().Model(&Recipe{}).AddForeignKey("user_id", "users(id)", "cascade", "cascade")
+	db.AutoMigrate(&LikedRecipe{}, &User{})
 	db.Debug().Model(&LikedRecipe{}).AddForeignKey("user_id", "users(id)", "cascade", "cascade")
-	db.Debug().Model(&LikedRecipe{}).AddForeignKey("recipe_id", "recipes(id)", "cascade", "cascade")
-	db.Debug().Model(&LikedUser{}).AddForeignKey("user_id", "users(id)", "cascade", "cascade")
-	db.Debug().Model(&LikedUser{}).AddForeignKey("liked", "users(id)", "cascade", "cascade")
 }
 
 func (u *User) CreateUser() *User {
@@ -84,6 +78,9 @@ func CheckPasswordHash(password, hash string) bool {
 }
 
 func GenerateJwt(user *User) (string, error) {
+	fmt.Println(user.ID)
+	recipes := GetAllUsersLikedRecipes(user.ID)
+	fmt.Println(recipes)
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["profileAvatar"] = user.ProfileAvatar
@@ -91,6 +88,7 @@ func GenerateJwt(user *User) (string, error) {
 	claims["firstName"] = user.FirstName
 	claims["lastName"] = user.LastName
 	claims["email"] = user.Email
+	claims["likedRecipes"] = recipes
 	claims["exp"] = time.Now().Add(time.Hour * 100).Unix()
 	tokenString, err := token.SignedString(mySigningKey)
 	if err != nil {
@@ -122,6 +120,12 @@ func ValidUser(user *User) (map[string]string, int) {
 		}
 	}
 	return err, len(err)
+}
+
+func GetUserById(id uint) *User {
+	var user User
+	db.Raw("SELECT * users WHERE id = ?", id).Scan(&user)
+	return &user
 }
 
 func GetUserByEmail(email string) (*User, error) {

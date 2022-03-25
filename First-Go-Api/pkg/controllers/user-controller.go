@@ -60,6 +60,19 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func Renew(w http.ResponseWriter, r *http.Request) {
+	PotentialLogin := &models.User{}
+	utils.ParseBody(r, PotentialLogin)
+	user, _ := models.GetUserByEmail(PotentialLogin.Email)
+	jwt, err := models.GenerateJwt(user)
+	if err != nil {
+		fmt.Println("Error generating JWT", err.Error())
+	}
+	res, _ := json.Marshal(jwt)
+	w.WriteHeader(http.StatusOK)
+	w.Write(res)
+}
+
 func Login(w http.ResponseWriter, r *http.Request) {
 	PotentialLogin := &models.User{}
 	utils.ParseBody(r, PotentialLogin)
@@ -115,7 +128,8 @@ func GoogleLogin(w http.ResponseWriter, r *http.Request) {
 	if err.Error() == "no user" {
 		CreateUser.CreateUser()
 	}
-	jwt, err := models.GenerateJwt(CreateUser)
+	newLogin, _ := models.GetUserByEmail(GoogleUser.Email)
+	jwt, err := models.GenerateJwt(newLogin)
 	if err != nil {
 		fmt.Println("Error generating JWT", err.Error())
 	}

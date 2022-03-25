@@ -21,6 +21,7 @@ export default ({loggedInUser, setLoggedInUser}) => {
     backgroundRepeat: 'no-repeat',
     backgroundPosition: 'center',
   };
+  console.log(loggedInUser)
   return (
     <div className='landingPage'
       style={myStyle}>
