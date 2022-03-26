@@ -16,8 +16,8 @@ const [registerOpen, setRegisterOpen] = React.useState(false)
 const [activeLink, setActiveLink] = React.useState(localStorage.getItem("active") ? localStorage.getItem("active") : localStorage.setItem('active', "Overview"))
 const history = useHistory()
 const links =[
-  {link: "/recipes", name : 'All Recipes'},
-  {link : `/dashboard/favorites/${loggedInUser.user_id}`, name : "Favorite Recipes"}
+  {link: "/", name : 'All Recipes'},
+  {link : `/favorites`, name : "Favorite Recipes"}
 ]
 const open = (page) => {
   
@@ -65,7 +65,7 @@ const inactive = {
   const logout = () => {
     Cookies.remove("user_id")
     setLoggedInUser("no user")
-    history.push("/")
+   
   }
 
   return (
@@ -77,21 +77,11 @@ const inactive = {
           justifyContent: 'space-evenly',
         }}
       >
-        {loggedInUser === "no user" ?
-          <ul className='navlinks d-flex pt-3 px-3'>
-            <li className='list-unstyled ps-2'>
-            
-              <LoginModal setLoggedInUser={setLoggedInUser} changeOpen={open} loginOpen={loginOpen}/>
-              <RegistrationModal setLoggedInUser={setLoggedInUser} changeOpen={open} registerOpen={registerOpen}/>
-            </li>
-          </ul>
-          :
-      
-          <ul className='navlinks d-flex pt-3 px-3'>
+        
+          <ul className='navlinks d-flex align-items-center pt-3 px-3'>
+          
+          
             <li className='list-unstyled pe-5'>
-          {
-            currentPage === 'dashboard' ?
-            
             <div className="d-flex gap-3">
             {links.map((item,i) => {
               console.log(activeLink)
@@ -107,15 +97,24 @@ const inactive = {
                 </li>
               )
               })}
-            </div>:
-<Button onClick={logout}
-              sx={buttonStyle}
-              >Log out</Button>
-
-          }
+            </div>
             </li>
+            {
+              loggedInUser == "no user" ?
+            
+            <li className='list-unstyled ps-2'>
+            
+            <LoginModal setLoggedInUser={setLoggedInUser} changeOpen={open} loginOpen={loginOpen}/>
+            <RegistrationModal setLoggedInUser={setLoggedInUser} changeOpen={open} registerOpen={registerOpen}/>
+          </li>:
+          <li className='list-unstyled ps-2'>
+            <Button onClick={logout}
+              sx={dashboardStyle}
+            >Log out</Button>
+          </li>
+}
           </ul>
-        }
+
       </Row>
     </div>
   );

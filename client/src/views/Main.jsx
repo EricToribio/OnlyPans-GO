@@ -12,35 +12,15 @@ export default ({loggedInUser, setLoggedInUser}) => {
   const history = useHistory();
   const [activeLink, setActiveLink] = useState(localStorage.getItem("active") ? localStorage.getItem("active") : localStorage.setItem('active', "Overview"))
   const [sortTag, setSortTag] = useState('Beef');
-  useEffect(() => {
-    !Cookies.get("user_id") &&
-        history.push('/')
-  }, []);
-  const logout = () => {
-    Cookies.remove("user_id")
-    setLoggedInUser("no user")
-  }
-  const dashboardStyle ={
-    ':hover': {
-      bgcolor: '#ef5350 !important',
-      color: '#000000',
-    },
-    color: '#000000',
-    fontWeight: 'bold'
-  }
+  
   return (
     <div className='container'>
-      <div className='d-flex align-items-center justify-content-between'>
+      <div className='d-flex justify-content-between pt-4' >
         <div className='d-flex justify-content-start'>
-          <Header currentPage='dashboard' id={loggedInUser.user_id}/>
+          <Header currentPage='dashboard'/>
         </div>
           <div className='d-flex justify-content-evenly'>
-            <NavLinks activeLink={activeLink} currentPage='dashboard'  loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
-          </div>
-          <div className=''>
-          <Button onClick={logout}
-                sx={dashboardStyle}
-                >Log out</Button>
+            <NavLinks activeLink={activeLink} loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
           </div>
         </div>
       <BlogHeader sortTag={sortTag}  user={user} pageComponent='viewallrecipes' />

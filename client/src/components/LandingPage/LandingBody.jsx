@@ -57,7 +57,7 @@ export default ({ loggedInUser }) => {
         loggedInUser != "no user" &&
         <ul className='navlinks pt-3 px-5'>
             <li className='list-unstyled pe-5'>
-              <Button component={Link} to={`/dashboard/${loggedInUser.user_id}`}
+              <Button component={Link} to={"/recipes"}
                 sx={buttonStyle} 
               ><Typography variant="h4" component="div"
               sx={{

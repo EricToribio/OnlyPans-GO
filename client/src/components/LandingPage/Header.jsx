@@ -5,7 +5,7 @@ import { Row, Item } from '@mui-treasury/components/flex';
 import { Info, InfoTitle } from '@mui-treasury/components/info';
 import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-export default ({ currentPage, id }) => {
+export default ({ id }) => {
   const logo = require('../static/images/onlypansegglogo.png');
 
   return (
@@ -41,31 +41,9 @@ export default ({ currentPage, id }) => {
             fontSize: '3rem'
           }}
         >
-          {
-            currentPage === 'landingPage' ?
-              <span className='h1 fw-bold text-white pe-5'>
-                N L Y P A N S
-              </span>
-              :
-              currentPage === 'createRecipe' ?
-                <span className='h1 fw-bold text-white pe-5'>
-                  <Typography
-                   variant="h3"
-                   component={Link} to={`/dashboard/${id}`}
-                    sx={{ 
-                      color: 'text.primary' ,
-                      textDecoration:'none'
-                      
-                      }}>
-                    N L Y P A N S
-                  </Typography>
-                </span>
-                :
-                currentPage === 'dashboard' ?
                 <span className='h1 fw-bold text-dark pe-5'>
                   <Typography
                    variant="h3"
-                   component={Link} to={`/dashboard/${id}`}
                     sx={{ 
                       color: 'text.primary' ,
                       textDecoration:'none'
@@ -74,9 +52,8 @@ export default ({ currentPage, id }) => {
                     N L Y P A N S
                   </Typography>
                 </span>
-                :
-                <></>
-          }
+               
+          
         </InfoTitle>
       </Info>
     </Row>

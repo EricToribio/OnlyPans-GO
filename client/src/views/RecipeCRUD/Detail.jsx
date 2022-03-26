@@ -31,8 +31,7 @@ const Detail = ({ loggedInUser, setLoggedInUser }) => {
 
   const [activeLink, setActiveLink] = useState(localStorage.getItem("active") ? localStorage.getItem("active") : localStorage.setItem('active', "Overview"))
   useEffect(() => {
-    !Cookies.get("user_id") &&
-      history.push('/')
+
     axios.get('https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + id)
       .then(res => {
         console.log(res.data)
@@ -79,49 +78,12 @@ console.log(ingredients)
       .then(res => {
         Cookies.set("user_id", res.data, { path: '/' })
         setLoggedInUser(jwt_decode(Cookies.get("user_id")))
-        
+        setLiked(false)
       }).catch(err=> console.log(err))
-      setLiked(false)
     })
     .catch(err => console.log(err))
   }
 
-  const linkStyle = {
-    fontFamily: 'Open Sans',
-    fontWeight: 'normal',
-    color: '#000',
-    textTransform: 'capitalize',
-    p: 0,
-    ':hover': {
-      color: '#212121'
-    },
-    ':active': {
-      fontWeight: 'bold'
-    }
-  }
-
-  const avatarSize = {
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-    objectFit: 'cover',
-    height: 60,
-  }
-
-  
-    
-  const logout = () => {
-    Cookies.remove("user_id")
-    setLoggedInUser("no user")
-  }
-  const dashboardStyle = {
-    ':hover': {
-      bgcolor: '#ef5350 !important',
-      color: '#000000',
-    },
-    color: '#000000',
-    fontWeight: 'bold'
-  }
   return (
     <div className='container'>
       <div className='d-flex align-items-center justify-content-between'>
@@ -132,11 +94,7 @@ console.log(ingredients)
         <div className='d-flex justify-content-evenly'>
           <NavLinks activeLink={activeLink} currentPage='dashboard' loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser} />
         </div>
-        <div className=''>
-          <Button onClick={logout}
-            sx={dashboardStyle}
-          >Log out</Button>
-        </div>
+      
         {/* </div> */}
       </div>
       <BlogHeader sortTag={recipe.strMeal}
@@ -161,11 +119,14 @@ console.log(ingredients)
                sx={{color : 'red'}}>
                 <FavoriteIcon />
               </IconButton>:
+              loggedInUser != "no user" ?
               <IconButton aria-label="add to favorites"
               onClick={(e) => onFavoriteHandler(recipe.idMeal, recipe.strMealThumb, recipe.strMeal, recipe.strCategory)}
              >
-              <FavoriteIcon />
-            </IconButton>
+              <FavoriteIcon /> 
+            </IconButton> :
+            <h4>Login to like recipes</h4>
+
                 }
                 
           
@@ -267,7 +228,7 @@ console.log(ingredients)
                   </Typography>
               {
                 recipe.strYoutube != "" &&
-                      <h3 className='text-center'>Watch the step by step video on <Link to={recipe.strYoutube}> YouTube</Link></h3>
+                      <h3 className='text-center'>Watch the step by step video on <a href={recipe.strYoutube} target="_blank"> YouTube</a></h3>
               }
                       
             </CardContent>

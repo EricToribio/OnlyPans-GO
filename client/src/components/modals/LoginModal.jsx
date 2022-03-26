@@ -33,7 +33,7 @@ export default function TransitionsModal({setLoggedInUser,changeOpen,loginOpen})
       bgcolor: '#ef5350 !important',
       color: 'white',
     },
-    color: '#fff',
+    color: '#000000',
     fontWeight: 'bold'
   }
   const change = (name) => {
