@@ -179,7 +179,7 @@ export default ({ handleClose, setLoggedInUser, changeOpen}) => {
             <Button
             type="button"
             fullWidth
-            onClick={(e) => changeOpen(e, "register")}
+            onClick={(e) => changeOpen("register")}
             sx={{ mt: 3, mb: 2, }}
           >
               Don't have an Account?

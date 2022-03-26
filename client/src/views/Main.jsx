@@ -44,7 +44,7 @@ export default ({loggedInUser, setLoggedInUser}) => {
           </div>
         </div>
       <BlogHeader sortTag={sortTag}  user={user} pageComponent='viewallrecipes' />
-      <RecipeList lsortTag={sortTag} setSortTag={setSortTag} user={loggedInUser} />
+      <RecipeList setActiveLink={setActiveLink} sortTag={sortTag} setSortTag={setSortTag} user={loggedInUser} />
     </div>
   )
 };

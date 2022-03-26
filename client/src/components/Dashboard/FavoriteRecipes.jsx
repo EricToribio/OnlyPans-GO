@@ -27,15 +27,6 @@ export default ({ favoriteRecipes }) => {
       fontWeight: 'bold'
     }
   }
-
-  // const avatarSize = {
-  //   backgroundRepeat: 'no-repeat',
-  //   backgroundSize: 'cover',
-  //   backgroundPosition: 'center',
-  //   objectFit: 'cover',
-  //   height: 60,
-  // }
-
   return (
     <div className='fave-recipes d-flex align-items-center
               justify-content-center flex-wrap gap-5'>
@@ -51,22 +42,8 @@ export default ({ favoriteRecipes }) => {
                     border: '1px solid #e0e0e0',
                   }}>
                   <CardHeader
-                    // avatar={
-                    //   <Link to='#'
-                    //   // {`/user/${user._id}`}
-                    //   >
-                    //     <img src={user.profileAvatar}
-                    //       alt="{name}" className="img logo rounded-circle mb-1"
-                    //       style={avatarSize}></img>
-                    //   </Link>
-                    // }
-                    // action={
-                    //   <IconButton aria-label="settings">
-                    //     <MoreVertIcon />
-                    //   </IconButton>
-                    // }
                     title={
-                      <Button component={Link} to={`/recipe/${recipe.id}`}
+                      <Button component={Link} to={`/recipe/${recipe.Recipe_id}`}
                         sx={linkStyle}
                         style={{
                           fontWeight: 'bold',
@@ -76,38 +53,22 @@ export default ({ favoriteRecipes }) => {
                           overflow: 'hidden',
                           WebkitBoxOrient: 'vertical',
                           WebkitLineClamp: 2,
-                        }}>
-                        {recipe.name}
+                        }}
+                        className="text-center"
+                        >
+                        {recipe.Name}
                       </Button>
                     }
                   />
-                  <Link to={`/recipe/${recipe.id}`}>
+                  <Link to={`/recipe/${recipe.Recipe_id}`}>
                     <CardMedia
                       component="img"
                       height="194"
-                      image={recipe.img}
-                      alt={recipe.name}
+                      image={recipe.image}
+                      alt={recipe.Name}
                     />
                   </Link>
-                  <CardContent
-                    sx={{
-                      paddingBottom: '0 !important',
-                      p: '0 !important'
-                    }}>
-                    <Link to={`/recipe/${recipe.id}`}>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{
-                          display: '-webkit-box',
-                          overflow: 'hidden',
-                          WebkitBoxOrient: 'vertical',
-                          WebkitLineClamp: 3,
-                        }}>
-                        {recipe.description}
-                      </Typography>
-                    </Link>
-                  </CardContent>
+                 
                   {/* <CardActions disableSpacing>
                     <Button
                       onClick={(e) => onFavoriteHandler(recipe._id, recipe.image, recipe.name)}

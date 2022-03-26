@@ -28,9 +28,25 @@ export default function TransitionsModal({setLoggedInUser,changeOpen,loginOpen})
     loginOpen && handleOpen()
     !loginOpen && handleClose()
   },[loginOpen])
-
+  const buttonStyle = {
+    ':hover': {
+      bgcolor: '#ef5350 !important',
+      color: 'white',
+    },
+    color: '#fff',
+    fontWeight: 'bold'
+  }
+  const change = (name) => {
+    changeOpen( name)
+    handleClose()
+  }
   return (
     <div>
+      <Button onClick={(e) => handleOpen()}
+        sx={buttonStyle}
+      >
+        Log In
+      </Button>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -45,7 +61,7 @@ export default function TransitionsModal({setLoggedInUser,changeOpen,loginOpen})
         <Fade in={open}>
           <Box sx={style}>
             {/* ENTER LOGIN HERE */}
-            <Login handleClose={handleClose} setLoggedInUser={setLoggedInUser} changeOpen={changeOpen}/>
+            <Login handleClose={handleClose} setLoggedInUser={setLoggedInUser} changeOpen={change}/>
           </Box>
         </Fade>
       </Modal>

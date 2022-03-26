@@ -18,7 +18,7 @@ import StickyFooter from './StickyFooter';
 // import ShareIcon from '@mui/icons-material/Share';
 // import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-export default ({ user, sortTag, setSortTag }) => {
+export default ({ user, sortTag, setSortTag,setActiveLink }) => {
   const [recipes, setRecipes] = useState([]);
   const [sortBy, setSortBy] = useState('Beef');
   const [links, setLinks] = useState([])
@@ -122,7 +122,9 @@ export default ({ user, sortTag, setSortTag }) => {
                   sx={{
                     maxWidth: 345,
                   }}>
-                    <Link to={`/recipe/${recipe.idMeal}`} className='text-decoration-none'>
+                    <Link to={`/recipe/${recipe.idMeal}`} className='text-decoration-none'
+                    onClick={(e) => setActiveLink(localStorage.setItem('active', ""))}
+                    >
                  
                         <h4 className='text-center'>{recipe.strMeal}</h4>
                   

@@ -178,7 +178,7 @@ export default ({ handleClose, setLoggedInUser,changeOpen}) => {
           <Grid container justifyContent="center">
             <Grid item sx={{ textAlign: 'center' }}>
               Already have an Account?
-              <Button onClick={(e) => changeOpen(e, "login")} variant="body2" >
+              <Button onClick={(e) => changeOpen("login")} variant="body2" >
                 Log In
               </Button>
             </Grid>

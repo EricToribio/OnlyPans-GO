@@ -11768,7 +11768,7 @@ a[data-toggle="collapse"] {
 
 .dashboard-body,
 .sticky-footer {
-
+margin-top: -200px;
 }
 
 .footer p {

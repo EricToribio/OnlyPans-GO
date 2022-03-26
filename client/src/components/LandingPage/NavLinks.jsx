@@ -16,14 +16,12 @@ const [registerOpen, setRegisterOpen] = React.useState(false)
 const [activeLink, setActiveLink] = React.useState(localStorage.getItem("active") ? localStorage.getItem("active") : localStorage.setItem('active', "Overview"))
 const history = useHistory()
 const links =[
-  {link : `/dashboard/${loggedInUser.user_id}` , name : "Overview"},
-  {link: "/recipes", name : 'Blog'},
-  {link : "#", name : "Users Liked"},
+  {link: "/recipes", name : 'All Recipes'},
   {link : `/dashboard/favorites/${loggedInUser.user_id}`, name : "Favorite Recipes"}
 ]
-const open = (e, page) => {
-  e.preventDefault()
-  console.log(page)
+const open = (page) => {
+  
+  
   if (page === "login"){
     setLoginOpen(true)
     setRegisterOpen(false)
@@ -46,14 +44,14 @@ const dashboardStyle ={
   fontWeight: 'bold'
 }
 
-  const buttonStyle = {
-    ':hover': {
-      bgcolor: '#ef5350 !important',
-      color: 'white',
-    },
-    color: '#fff',
-    fontWeight: 'bold'
-  }
+const buttonStyle = {
+  ':hover': {
+    bgcolor: '#ef5350 !important',
+    color: 'white',
+  },
+  color: '#fff',
+  fontWeight: 'bold'
+}
   const active = {
     color: '#ffc107',
     textDecoration: 'none'
@@ -67,6 +65,7 @@ const inactive = {
   const logout = () => {
     Cookies.remove("user_id")
     setLoggedInUser("no user")
+    history.push("/")
   }
 
   return (
@@ -81,11 +80,7 @@ const inactive = {
         {loggedInUser === "no user" ?
           <ul className='navlinks d-flex pt-3 px-3'>
             <li className='list-unstyled ps-2'>
-            <Button onClick={(e) => open(e, "login")}
-        sx={buttonStyle}
-      >
-        Log In
-      </Button>
+            
               <LoginModal setLoggedInUser={setLoggedInUser} changeOpen={open} loginOpen={loginOpen}/>
               <RegistrationModal setLoggedInUser={setLoggedInUser} changeOpen={open} registerOpen={registerOpen}/>
             </li>
@@ -112,15 +107,6 @@ const inactive = {
                 </li>
               )
               })}
-          <li>
-            {/* <Link to="/user/edit/:id">Edit Info</Link> */}
-            {/* <EditUserModal
-              setLogout={logout}
-              >Edit Info</EditUserModal> */}
-          </li>
-              <li>
-                
-              </li>
             </div>:
 <Button onClick={logout}
               sx={buttonStyle}

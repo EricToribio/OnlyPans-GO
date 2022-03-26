@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
+import { Button } from '@mui/material';
 import FavoriteRecipes from '../../components/Dashboard/FavoriteRecipes';
-import SideNav from '../../components/Dashboard/SideNav';
-import ToggleColorMode from '../../components/Themes/ToggleDarkMode';
-import { ThemeProvider } from '@material-ui/styles';
+import BlogHeader from '../../components/RecipeBlog/BlogHeader'
 import { createTheme } from '@material-ui/core';
 import Cookies from 'js-cookie';
 import Header from '../../components/LandingPage/Header';
@@ -13,18 +11,26 @@ import NavLinks from '../../components/LandingPage/NavLinks';
 const baseTheme = createTheme();
 
 export const FavoriteRecipeView = ({loggedInUser,setLoggedInUser}) => {
-  const [user, setUser] = useState(false);
-  const [logout, setLogout] = useState();
   const history = useHistory();
 
   useEffect(async () => {
     !Cookies.get("user_id") &&
         history.push('/');
-    
   }, []);
-
+  const logout = () => {
+    Cookies.remove("user_id")
+    setLoggedInUser("no user")
+  }
+  const dashboardStyle = {
+    ':hover': {
+      bgcolor: '#ef5350 !important',
+      color: '#000000',
+    },
+    color: '#000000',
+    fontWeight: 'bold'
+  }
   return (
-    <div>
+    <div className='container'>
       <div className='d-flex align-items-center justify-content-between'>
         <div className='d-flex justify-content-start'>
           <Header currentPage='dashboard' id={loggedInUser.id}/>
@@ -34,24 +40,19 @@ export const FavoriteRecipeView = ({loggedInUser,setLoggedInUser}) => {
             <NavLinks  currentPage='dashboard'  loggedInUser={loggedInUser} setLoggedInUser={setLoggedInUser}/>
           </div>
         </div>
+        <div className=''>
+          <Button onClick={logout}
+            sx={dashboardStyle}
+          >Log out</Button>
         </div>
-      {/* <div className='position-fixed'> */}
-        {/* <SideNav setLogout={setLogout}
-          avatar={user.profileAvatar}
-          username={user.username}
-          id={user._id} />
-      </div> */}
+        </div>
+      <BlogHeader sortTag="Favorite Recipes"
+        pageComponent='viewonerecipe' />
       <div className='dashboard-body'>
-        <ToggleColorMode currentPage="dashboard">
-          <ThemeProvider theme={baseTheme}>
             <div className="App">
-              {
-                user &&
-                <FavoriteRecipes favoriteRecipes={user.favoriteRecipe} />
-              }
+                <FavoriteRecipes favoriteRecipes={loggedInUser.likedRecipes} />
             </div>
-          </ThemeProvider>
-        </ToggleColorMode>
+
       </div>
     </div>
   )
